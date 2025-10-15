@@ -1,3 +1,5 @@
+<img width="1442" height="431" alt="image" src="https://github.com/user-attachments/assets/73f9c9cf-d4b3-49ee-a677-18df8d519e73" />
+
 # AI-No-Code-Data-Extractor
 AI No-Code Data Extractor is an n8n workflow that uses OpenAI to generate, structure, and export AI responses into Excel automatically.
 
