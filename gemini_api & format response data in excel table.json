@@ -1,0 +1,293 @@
+{
+  "name": "gemini_api & format response data in excel table",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -16
+      ],
+      "id": "6bab83ff-f2c4-47b8-9cdd-eda1a1de0b34",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "give me the top 5 names, release date, url, description, main features, monthlyprice, why it is trending , refrence video of trending nocode softwares.\n\nStart each one with -> and write like this name: xyz , release date: xyz etc dono't mention ** \n",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Give names of top 5 nocode platform "
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        80,
+        -32
+      ],
+      "id": "9612addc-39b5-424b-a4a4-05c8633a148d",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        160
+      ],
+      "id": "1d58f3d6-0b7b-4668-9c32-d9cec32dc5aa",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "40ShErKPhu8SkISn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1J2g1v6PlNzIv7YJI-pNpuh83BrSDQ5XfS64TYErUxVE/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1J2g1v6PlNzIv7YJI-pNpuh83BrSDQ5XfS64TYErUxVE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name ": "={{ $('AI Transform1').item.json.name }}",
+            "Release Date ": "={{ $('AI Transform1').item.json['release date'] }}",
+            "URL ": "={{ $('AI Transform1').item.json.url }}",
+            "Description ": "={{ $('AI Transform1').item.json.description }}",
+            "Main Features ": "={{ $('AI Transform1').item.json['main features'] }}",
+            "Monthly price ": "={{ $('AI Transform1').item.json.monthlyprice }}",
+            "why it is trending ": "={{ $('AI Transform1').item.json['why it is trending'] }}",
+            "Refrence video ": "={{ $('AI Transform1').item.json['refrence video of trending'] }}"
+          },
+          "matchingColumns": [
+            "Response"
+          ],
+          "schema": [
+            {
+              "id": "Name ",
+              "displayName": "Name ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Release Date ",
+              "displayName": "Release Date ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "URL ",
+              "displayName": "URL ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Description ",
+              "displayName": "Description ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Main Features ",
+              "displayName": "Main Features ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Monthly price ",
+              "displayName": "Monthly price ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "why it is trending ",
+              "displayName": "why it is trending ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Refrence video ",
+              "displayName": "Refrence video ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        832,
+        112
+      ],
+      "id": "99cf5cf8-aae2-4ce2-bb38-8a63fb9c3688",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "sapCwtiFDGuUw2br",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "formatDate",
+        "date": "={{ $json['Date '] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTime",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -32
+      ],
+      "id": "13d8193d-701f-4ef5-881b-36c8f0866087",
+      "name": "Date & Time"
+    },
+    {
+      "parameters": {
+        "instructions": "text Read the data and split the data intomultiple records. key:value pair is formated in this way. remove extra spaces in tabular data. each record start with ->",
+        "codeGeneratedForPrompt": "text Read the data and split the data intomultiple records. key:value pair is formated in this way. remove extra spaces in tabular data. each record start with ->",
+        "jsCode": "const items = $input.all();\nconst records = items[0]?.json?.text.split(\"->\").slice(1);\nconst result = records.map((record) => {\n  const fields = record.split(\",\").map((field) => field.trim());\n  const item = {};\n  fields.forEach((field) => {\n    const [key, value] = field.split(\":\").map((part) => part.trim());\n    item[key] = value;\n  });\n  return { json: item };\n});\nreturn result;\n"
+      },
+      "type": "n8n-nodes-base.aiTransform",
+      "typeVersion": 1,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "82526ceb-4d40-43f4-bf01-643b77827146",
+      "name": "AI Transform1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "AI Transform1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Date & Time": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Transform1": {
+      "main": [
+        [
+          {
+            "node": "Date & Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "afeaea6e-96a9-4035-862a-bbcea90c495f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "edd8d0d94eb58c4dfb249b594ac07f98f1443b28160be513703cff3d2cf012a6"
+  },
+  "id": "dyLssjtLAgR619kz",
+  "tags": []
+}
